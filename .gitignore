@@ -1,7 +1,7 @@
 /DATA/**
-/OUTPUT/CSV/**
-/OUTPUT/PNG/**
-/OUTPUT/PIP/**
+/OUTPUT/CSV/**.csv
+/OUTPUT/PNG/**.png
+/OUTPUT/PIP/**.csv
 /SHP/GROUND/**
 /SHP/PIP/Area1/**
 /SHP/PIP/Area2/**
