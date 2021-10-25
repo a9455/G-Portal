@@ -1,4 +1,4 @@
-/DATA/**
+/DATA/**.h5
 /OUTPUT/CSV/**.csv
 /OUTPUT/PNG/**.png
 /OUTPUT/PIP/**.csv

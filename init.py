@@ -24,7 +24,7 @@ filelist = glob.glob("./DATA/*.h5")
 〇　パラメータ説明
 Ele    : 要素番号[緯度，経度，データ]
          既知の場合 ⇒ 要素番号のリストを作成する
-	     未知の場合 ⇒ わからない要素番号に-1を入れたリストを作成する
+	     未知の場合 ⇒ わからない要素番号に-1を入れたリストを作成する.例えば，[0,1,-1]とか
 slope  : データ変換用の定数[傾き]
 offset : データ変換用の定数[切片]
 		 ※slopeとoffsetの定数は"https://shikisai.jaxa.jp/faq/docs/GCOM-C_FAQ_DNconversion_en_200422.pdf"から引用
