@@ -1,8 +1,3 @@
-"""
-GET INFORMATION OF CHLA
-PREPARE OFFSET AND SLOPE FROM HERE
-https://suzaku.eorc.jaxa.jp/GCOM_C/data/update/Algorithm_IWPR_ja.html
-"""
 
 import os
 import glob
@@ -66,7 +61,7 @@ def Interpolation(point:list):
 				NG[i,f] = Ax + Bx + Cx + Dx
 	return NG[:10,:10]
 
-def ShpProcess(ReFoder):
+def ShpProcess():
 	## 背景図の読み込み
 	shpfile = glob.glob("./SHP/GROUND/*.shp")
 	if len(shpfile) ==1:
@@ -78,10 +73,6 @@ def ShpProcess(ReFoder):
 	shpfolder = os.listdir("./SHP/PIP")
 	PIP = []
 	for folder in shpfolder:
-		if ReFoder == "Yes":
-			RemakeFolder(f"./OUTPUT/PIP/{folder}")
-		else:
-			mkdir(f"./OUTPUT/PIP/{folder}")
 		shpfile = glob.glob(f"./SHP/PIP/{folder}/*.shp")[0]
 		shpdata = gpd.read_file(shpfile)
 		shpdata = cascaded_union(shpdata.geometry)
@@ -97,7 +88,7 @@ class DataProcess():
 		self.cmap    = cmap    # cmap
 		self.dpflag  = 0       # 緯度経度の展開を判断するフラグ(0:する、1:しない)
 		self.Workdir = "./tmp"
-		self.GROUNDs, self.PIPs = ShpProcess(self.Refolder)   # read shp files
+		self.GROUNDs, self.PIPs = ShpProcess()   # read shp files
 
 		## Reset folder
 		if self.Refolder == "Yes":
@@ -235,7 +226,6 @@ class DataProcess():
 		"""
 		mkdir(self.SaveDirC)                        # prepare output folders
 		## STEP0 : Load data
-		print(self.cont[1])
 		lat  = np.load(f"{self.Workdir}/DATA/Latitude.npy")
 		lon  = np.load(f"{self.Workdir}/DATA/Longitude.npy")
 		data = np.load(f"{self.Workdir}/DATA/{self.cont[1]}.npy")
@@ -325,7 +315,9 @@ class DataProcess():
 		fig = plt.figure(figsize=(self.figX, self.figY), dpi=250)
 		ax = fig.add_subplot(111)
 		## COUNTOR PLOT
-		data = np.where(self.data==-999, np.nanmin(data), self.data)
+		data = self.data + 0
+		nand = np.where(data==-999 , 99999,           self.data)
+		data = np.where(nand==99999, np.nanmin(nand), self.data)
 		if self.Element[0] == "ALL":
 			Vmin, Vmax = np.nanmin(data), np.nanmax(data)
 		else:

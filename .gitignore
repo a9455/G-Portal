@@ -1,3 +1,5 @@
+/tmp
+/__pycache__
 /DATA/**.h5
 /OUTPUT/CSV/
 /OUTPUT/PNG/
