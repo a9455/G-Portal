@@ -82,11 +82,11 @@ repositry ---- init.py
            |                  |- 以降，複数設定可能
            |- OUTPUT(実行後作成される) --- CSV  --- 指定範囲内のcsv出力用フォルダ
                                    　　|- PNG  --- 指定範囲内のpng出力用フォルダ
-                                   　　|- PIP  --- データ種別1--- Area1(PIPで作成したフォルダ名) -- PIP(Area1)のcsv出力用フォルダ
-                                   　　|        |             |- Area2(PIPで作成したフォルダ名) -- PIP(Area2)のcsv出力用フォルダ
+                                   　　|- PIP  --- データ種別1--- Area1(PIPで作成したフォルダ名) -- PIP(Area1)のcsv
+                                   　　|        |             |- Area2(PIPで作成したフォルダ名) -- PIP(Area2)のcsv
                                    　　|        |             |- 以降，SHP/PIPで作成したフォルダの数だけ作成される
-                                   　　|        |- データ種別2--- Area1(PIPで作成したフォルダ名) -- PIP(Area1)のcsv出力用フォルダ
-                                   　　|        |             |- Area2(PIPで作成したフォルダ名) -- PIP(Area2)のcsv出力用フォルダ
+                                   　　|        |- データ種別2--- Area1(PIPで作成したフォルダ名) -- PIP(Area1)のcsv
+                                   　　|        |             |- Area2(PIPで作成したフォルダ名) -- PIP(Area2)のcsv
                                    　　|        |             |- 以降，SHP/PIPで作成したフォルダの数だけ作成される
                                 　　   |        |- 以降，hdf5ファイルに格納されているデータ分だけ出力される
                                 　　   | 
