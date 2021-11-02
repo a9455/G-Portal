@@ -1,0 +1,7 @@
+host       = "ftp.gportal.jaxa.jp"
+user       = "id"
+pw         = "pw"
+dtype      = "standard/GCOM-C/GCOM-C.SGLI/L2.LAND.RSRF/2"
+start      = "2021-01-01"
+end        = "2021-01-02"
+delta      = "H"
