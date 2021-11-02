@@ -384,7 +384,7 @@ class DataProcess():
 
 
 if __name__ == "__main__":
-	from init import *
+	from params import *
 	IDATA = DataProcess(FolderInitialization, XLIM, YLIM, Element, cmap)
 	count = 1
 	for filepath in filelist:

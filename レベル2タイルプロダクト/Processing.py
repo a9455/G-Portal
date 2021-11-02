@@ -356,7 +356,7 @@ def Stack(Rpath:list, Gpath:list, Bpath:list, filename):
 
 ### MAIN
 if __name__ == "__main__":
-	from init import *
+	from params import *
 	WorkPath     = f"./tmp"
 	SaveCsvPath  = f"./OUTPUT/CSV"
 	SavePngPath  = f"./OUTPUT/PNG"
