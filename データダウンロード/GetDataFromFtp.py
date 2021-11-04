@@ -1,3 +1,4 @@
+from params import *
 import os
 import datetime as dt
 from dateutil.relativedelta import relativedelta
@@ -58,19 +59,6 @@ def MakeTimeList(start:list, end:list, delta):
 	print(f"  Total {len(TimeList)} times")
 	return TimeList
 
-def MakeDownloadFileList(ftp, TimeList, dtype):
-	for dd in TimeList:
-		yy, mm, dd, hh = dd[0], dd[1], dd[2], dd[3]
-		# get files path
-		files = ftp.nlst(f"{dtype}/フォルダ構造による")  # os.listdir()みたいな感じ
-		getfiles = []
-		for file in files:
-			# if文による条件式とで取得ファイルを選別
-			# もしくはファイル名の構造を把握ているのであれば，直接指定してもいいし
-			# 後者の場合，filesの文もいらないよね
-			# yy, mm, dd, hhはたぶん使うから利用するのが吉
-			getfiles.append(file)
-
 def Download(ftp, DownloadFiles):
 	for DownloadFile in DownloadFiles:
 		filename = DownloadFile.split("/")[-1]
@@ -92,6 +80,5 @@ def GETDATAFROMFTP(host, user, pw, dtype, start, end, delta):
 	ftp.quit()
 
 if __name__=="__main__":
-	from params import *
 	# L62:MakeDownloadFileList(ftp, TimeList, dtype)を何とかする
 	GETDATAFROMFTP(host, user, pw, dtype, start, end, delta)
