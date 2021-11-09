@@ -379,12 +379,11 @@ if __name__ == "__main__":
 
 	for Time in TimeList:
 		year, month, day = str(Time[0]).zfill(2), str(Time[1]).zfill(2), str(Time[2]).zfill(2)    ## 処理日時
-		FilePath0 = f"./DATA/{Satelite}{Sensor}_{year}{month}{day}{A_D}{Ptu}_{Mapping}TileNo_{Level}{Type}_{ProductID}{Resolution}_{AlgoVer}{ppp}.h5"
+		FilePath0 = f"./{Dfolder}/{Satelite}{Sensor}_{year}{month}{day}{A_D}{Ptu}_{Mapping}TileNo_{Level}{Type}_{ProductID}{Resolution}_{AlgoVer}{ppp}.h5"
 		for Tile in TileNoList:
 			try:
 				FilePath = FilePath0.replace("TileNo", Tile)                                          ## ファイルパス
 				filename = FilePath.split("/")[-1].replace(".h5","")
-				"""
 				GetCoor(Tile)                                                               ## cal lat and lon
 				contents = Readhdf5(WorkPath, FilePath)                                               ## read datasets
 				for cont in contents:
@@ -392,11 +391,10 @@ if __name__ == "__main__":
 						EditGeometry(WorkPath, filename, Tile, cont, XLIM, YLIM)         ## Geometry_dataに対する処理
 					elif cont[0] == "Image_data":
 						EditImage(Dflag, WorkPath, Tile, cont, XLIM, YLIM, PIPs, cmap, filename, GROUNDs, Element) ## Image_dataに対する処理(CSV出力, PIP出力, PNG出力)
-				"""
 				if Dflag == "yes":
 					Stack(Rpath, Gpath, Bpath, filename)
-				#MoveFiles(filename)
-				#shutil.rmtree("./tmp")
+				MoveFiles(filename)
+				shutil.rmtree("./tmp")
 			except FileNotFoundError:
 				print(f"File doesn't exists, {year}/{month}/{day}")
 

@@ -83,12 +83,13 @@ def ShpProcess():
 	return shpb, PIP
 
 class DataProcess():
-	def  __init__(self, Resetfolder, XLIM, YLIM, Element, cmap):
+	def  __init__(self, Resetfolder, XLIM, YLIM, Element, cmap, Dfolder):
 		self.Refolder= Resetfolder
 		self.XLIM    = XLIM
 		self.YLIM    = YLIM
 		self.Element = Element # データ種別
 		self.cmap    = cmap    # cmap
+		self.Dfolder = Dfolder
 		self.dpflag  = 0       # 緯度経度の展開を判断するフラグ(0:する、1:しない)
 		self.Workdir = "./tmp"
 		self.GROUNDs, self.PIPs = ShpProcess()   # read shp files
@@ -103,7 +104,10 @@ class DataProcess():
 			mkdir("./OUTPUT/PNG")
 			mkdir("./OUTPUT/PIP")
 		pass
-
+	
+	def MakeFilelist(self):
+		filelist = glob.glob(f"./{self.Dfolder}/.h5")
+		return filelist
 	#################################################################################
 	#                           Read dataset from hdf5 
 	#################################################################################
@@ -385,7 +389,15 @@ class DataProcess():
 
 if __name__ == "__main__":
 	from params import *
-	IDATA = DataProcess(FolderInitialization, XLIM, YLIM, Element, cmap)
+	print("----------------------  PARAMETER  ----------------------")
+	print(f"FolderInitialization = {FolderInitialization}")
+	print(f"lon range : {XLIM[0]} ~ {XLIM[1]}")
+	print(f"lat range : {YLIM[0]} ~ {YLIM[1]}")
+	print(f"Target element = {Element}")
+	print("---------------------------------------------------------")
+
+	IDATA    = DataProcess(FolderInitialization, XLIM, YLIM, Element, cmap, Dfolder)
+	filelist = IDATA.MakeFileList()
 	count = 1
 	for filepath in filelist:
 		print(f"{count} / {len(filelist)}")
