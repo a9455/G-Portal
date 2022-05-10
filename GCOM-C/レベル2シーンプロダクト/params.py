@@ -5,9 +5,9 @@
 
 ## parameter ##
 FolderInitialization = "Yes"
-YLIM                 = [10, 13]
-XLIM                 = [123, 125]
+YLIM                 = [32.00, 34.00]
+XLIM                 = [129, 130]
 Element              = ['ALL'] 
 cmap                 = None
-Dfolder              = "./DATA"
+Dfolder              = "DATA"
 

@@ -11,7 +11,7 @@ import datetime as dt
 from dateutil.relativedelta import relativedelta
 import matplotlib
 import matplotlib.pyplot as plt
-from shapely.ops import cascaded_union
+from shapely.ops import unary_union
 
 ####################################################################################
 #                                      common
@@ -78,7 +78,7 @@ def ShpProcess():
 	for folder in shpfolder:
 		shpfile = glob.glob(f"./SHP/PIP/{folder}/*.shp")[0]
 		shpdata = gpd.read_file(shpfile)
-		shpdata = cascaded_union(shpdata.geometry)
+		shpdata = unary_union(shpdata.geometry)
 		PIP.append([folder, shpdata])
 	return shpb, PIP
 
@@ -103,11 +103,11 @@ class DataProcess():
 			mkdir("./OUTPUT/CSV")
 			mkdir("./OUTPUT/PNG")
 			mkdir("./OUTPUT/PIP")
-		pass
 	
 	def MakeFilelist(self):
-		filelist = glob.glob(f"./{self.Dfolder}/.h5")
+		filelist = glob.glob(f"./{self.Dfolder}/*.h5")
 		return filelist
+
 	#################################################################################
 	#                           Read dataset from hdf5 
 	#################################################################################
@@ -397,7 +397,7 @@ if __name__ == "__main__":
 	print("---------------------------------------------------------")
 
 	IDATA    = DataProcess(FolderInitialization, XLIM, YLIM, Element, cmap, Dfolder)
-	filelist = IDATA.MakeFileList()
+	filelist = IDATA.MakeFilelist()
 	count = 1
 	for filepath in filelist:
 		print(f"{count} / {len(filelist)}")

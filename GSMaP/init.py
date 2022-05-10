@@ -1,4 +1,4 @@
-mode       = 1
+mode       = 2
 host       = "ftp.gportal.jaxa.jp"
 user       = "id"
 pw         = "pw"
@@ -8,7 +8,7 @@ lon        = [100, 150]
 start      = [2021, 10, 10, 10]
 end        = [2021, 10, 10, 12]
 delta      = "H"
-ElementNum = 2
+ElementNum = -1
 
 """
 -----------------以下メモ欄-----------------
