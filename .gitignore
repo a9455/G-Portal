@@ -1,2 +1,5 @@
 /tmp
 /__pycache__
+/GCOM-C/レベル2シーンプロダクト/DATA/*
+/GCOM-C/レベル2シーンプロダクト/OUTPUT/*
+/GCOM-C/レベル2シーンプロダクト/OUTPUT*
