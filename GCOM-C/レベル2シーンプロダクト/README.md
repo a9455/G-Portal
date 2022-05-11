@@ -142,6 +142,47 @@ python Processing.py
 
 
 
+## 4. PIPで取得したデータから任意のポイントデータを取得
+#### 0. 利用するファイル
+PickUpPIPData.py  
+pysrc.searchgridpointindex.py  
+
+#### 1. パラメータ設定
+PickUpPIPData.pyを開いて、以下のパラメータ(__init__)を編集する。  
+
+``` python
+def __init__(self):
+	### 対象範囲のデータ
+	self.AreaShpName    = "tmp"         ## ./SHP/PIP/以下に配置されているフォルダ名(2.事前準備におけるArea1(2))
+	self.ElementList	= ["SST"]         ## 取得したい変数名(2.1.におけるElement)
+	self.ColXYName		= {               ## （３．実行）OUTPUT/PIP/**/**/**.csvにおけるXYのヘッダー名
+		"X" : "LON",
+		"Y" : "LAT",
+	}
+	### 抽出対象のデータ
+	self.PointCsvFile   = "./saseboObsPoint.csv"    # 抽出対象地点のX, Y, Labelをまとめたcsv（サンプル参照）
+	self.ResultColList	= {
+		"X"		: "X",                              # X軸のヘッダー
+		"Y"		: "Y",                              # Y軸のヘッダー
+		"Label" : "LOCATIONNA"                       # 適当なラベルのヘッダー
+	}
+	### 出力（基本的にノータッチでOK）
+	self.DataFolder = "./OUTPUT/PIP"                # （３．実行）時にPIP.csvが出力されるフォルダパス
+	self.OutFolder	= "./OUTPUT/PIPPoint"            # 出力先
+```
+
+#### 2. 実行
+
+```
+python3 PickUpPIPData.py
+```
+
+#### 3. 出力ファイル
+- 1.パラメータ設定のself.OutFolderで指定したフォルダにファイルが出力される。
+- ファイル名；Element.csvとElement_log.csv
+- 出力内容は以下の通り
+- Element.csvは横軸に抽出対象地点（self.PointCsvFileで指定した地点数）、縦軸に時間
+- Element_log.csvは取得場所の緯度経度
 
 
 

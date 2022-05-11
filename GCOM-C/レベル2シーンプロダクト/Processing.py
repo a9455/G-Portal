@@ -1,14 +1,14 @@
 
+
+from pysrc.read import *
+
+
 import os
 import glob
-import h5py
-import math
 import shutil
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-import datetime as dt
-from dateutil.relativedelta import relativedelta
 import matplotlib
 import matplotlib.pyplot as plt
 from shapely.ops import unary_union
@@ -22,15 +22,6 @@ def Cmap(cols):
 	for n, c in enumerate(cols):
 		color_list.append((n/nmax, c))
 	return matplotlib.colors.LinearSegmentedColormap.from_list('cmap', color_list)
-
-def mkdir(path):
-	if os.path.exists(path)==False:
-		os.makedirs(path)
-
-def RemakeFolder(path):
-	if os.path.exists(path)==True:
-		shutil.rmtree(path)
-	os.makedirs(path)
 
 def ReContents(contents, ELEMENT):
 	if ELEMENT != "ALL":
@@ -82,81 +73,23 @@ def ShpProcess():
 		PIP.append([folder, shpdata])
 	return shpb, PIP
 
-class DataProcess():
+class DataProcess(READ):
 	def  __init__(self, Resetfolder, XLIM, YLIM, Element, cmap, Dfolder):
 		self.Refolder= Resetfolder
 		self.XLIM    = XLIM
 		self.YLIM    = YLIM
 		self.Element = Element # データ種別
-		self.cmap    = cmap    # cmap
-		self.Dfolder = Dfolder
+		self.cmap		= cmap    # cmap
+		self.DataFolder = Dfolder
 		self.dpflag  = 0       # 緯度経度の展開を判断するフラグ(0:する、1:しない)
 		self.Workdir = "./tmp"
-		self.GROUNDs, self.PIPs = ShpProcess()   # read shp files
 
-		## Reset folder
-		if self.Refolder == "Yes":
-			RemakeFolder("./OUTPUT/CSV")
-			RemakeFolder("./OUTPUT/PNG")
-			RemakeFolder("./OUTPUT/PIP")
-		else:
-			mkdir("./OUTPUT/CSV")
-			mkdir("./OUTPUT/PNG")
-			mkdir("./OUTPUT/PIP")
-	
-	def MakeFilelist(self):
-		filelist = glob.glob(f"./{self.Dfolder}/*.h5")
-		return filelist
-
-	#################################################################################
-	#                           Read dataset from hdf5 
-	#################################################################################
-	def GetAttributesInfo(self, Name="COMMON"):
-		"""
-		hdf5データからメタ情報を読み取る関数\n
-		hdf5  : hdf5 data\n
-		GName : target attribute\n
-		spath : save path\n
-		"""
-		attr = self.hdf5.attrs
-		keys = attr.keys()
-		if Name == "COMMON":
-			Name = "COMMON"
-		else:
-			Name = Name
-		with open(f"./{self.Workdir}/{self.G1}/{Name}.csv", "w") as file:
-			for key in keys:
-				cont = str(attr[key][0]).replace("b'", "").replace("'", "").replace(",", " ")
-				file.write(f"{key},{cont}\n")
-
-	def GetDatasetInfo(self):
-		data = np.array(self.hdf5)
-		np.save(f"./{self.Workdir}/DATA/{self.G2}.npy", data)
-
-	def READ(self, filepath):
-		RemakeFolder(self.Workdir)            # フォルダの初期化
-		mkdir(f"./{self.Workdir}/DATA")
-		hdf5      = h5py.File(filepath, 'r')  # hdf5ファイルの読み込み
-		GROUP1    = list(hdf5.keys())         # 一番浅い階層のグループ名を取得
-		CONTENTS  = []                        # 変数名の箱
-		for self.G1 in GROUP1:
-			mkdir(f"{self.Workdir}/{self.G1}")
-			self.hdf5 = hdf5[self.G1]
-			self.GetAttributesInfo()                # 階層全般のメタ情報を取得
-			GROUP2 = list(self.hdf5.keys())         # 2番目の階層にあるグループ名を取得
-			for self.G2 in GROUP2:
-				self.hdf5 = hdf5[self.G1][self.G2]
-				CONTENTS.append([self.G1, self.G2])
-				self.GetAttributesInfo(self.G2)     # 階層全般のメタ情報を取得
-				self.GetDatasetInfo()               # 数値データの取得
-		hdf5.close()
-		return CONTENTS
 
 	#################################################################################
 	#                               data processing
 	#################################################################################
 	def EditGeometry(self):
-		mkdir(self.SaveDirC)
+		self.mkdir(self.SaveDirC)
 		## STEP0 : Load data
 		lat  = np.load(f"{self.Workdir}/DATA/Latitude.npy")
 		lon  = np.load(f"{self.Workdir}/DATA/Longitude.npy")
@@ -211,7 +144,7 @@ class DataProcess():
 		data = data.set_crs("EPSG:4326")
 		col  = list(data.columns)
 		SaveFolder = f"./OUTPUT/PIP/{self.cont[1]}/{ShpName}"
-		mkdir(SaveFolder)
+		self.mkdir(SaveFolder)
 		with open(f"{SaveFolder}/{self.filename}.csv", "w") as output:
 			output.write(f"{col[0]},{col[1]},{col[2]}\n")
 			for point in range(0, data.shape[0]):
@@ -231,7 +164,7 @@ class DataProcess():
 		STEP2 : Extract the specified range of data\n
 		STEP3 : Interpolation Coor.\n
 		"""
-		mkdir(self.SaveDirC)                        # prepare output folders
+		self.mkdir(self.SaveDirC)                        # prepare output folders
 		## STEP0 : Load data
 		lat  = np.load(f"{self.Workdir}/DATA/Latitude.npy")
 		lon  = np.load(f"{self.Workdir}/DATA/Longitude.npy")
@@ -316,7 +249,7 @@ class DataProcess():
 
 	def OutputPng(self):
 		## prepare
-		mkdir(self.SaveDirP)
+		self.mkdir(self.SaveDirP)
 		self.SetParams()
 		## DRAW
 		fig = plt.figure(figsize=(self.figX, self.figY), dpi=250)
@@ -342,32 +275,12 @@ class DataProcess():
 		plt.savefig(f"./OUTPUT/PNG/{self.cont[1]}/{self.filename}.png", bbox_inches="tight")
 		plt.close()
 
-	#################################################################################
-	#                                   COMMON
-	#################################################################################
-	def MoveFiles(self):
-		## get folder name
-		DIR = []
-		dir1 = os.listdir(self.Workdir)
-		for dirx in dir1:
-			dir2 = os.listdir(f"{self.Workdir}/{dirx}")
-			for dirx2 in dir2:
-				if dirx != "DATA":
-					dir2x = dirx2.replace(".csv","")
-					if dir2x == "COMMON":
-						DIR.append([dirx, dirx2, dirx])
-					else:
-						DIR.append([dirx, dirx2, dir2x])
-		## move files
-		for dirx in DIR:
-			mkdir(f"./OUTPUT/ATTRIBUTES/{dirx[2]}")
-			shutil.move(f"{self.Workdir}/{dirx[0]}/{dirx[1]}",
-						f"./OUTPUT/ATTRIBUTES/{dirx[2]}/{self.filename}.csv")
-		
+
 	#################################################################################
 	#                                    Main
 	#################################################################################
 	def ProcessHDF5File(self, filepath):
+		self.GROUNDs, self.PIPs = ShpProcess()   # read shp files
 		self.filename = filepath.split("/")[-1].split(".")[0]
 		contents = self.READ(filepath)
 		contents = ReContents(contents, self.Element[0])  # select contents
@@ -398,6 +311,7 @@ if __name__ == "__main__":
 
 	IDATA    = DataProcess(FolderInitialization, XLIM, YLIM, Element, cmap, Dfolder)
 	filelist = IDATA.MakeFilelist()
+	IDATA.ResetOutFolder()
 	count = 1
 	for filepath in filelist:
 		print(f"{count} / {len(filelist)}")
